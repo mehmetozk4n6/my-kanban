@@ -312,7 +312,7 @@
   }
 
   .board-mobile-day {
-    @apply flex-1 overflow-hidden relative;
+    @apply flex-1 overflow-hidden relative min-h-0;
     /* transition handled by swipe wrapper */
   }
 
@@ -396,7 +396,7 @@
 
   /* ── Day Column ── */
   .day-column {
-    @apply flex flex-col h-full border-r relative min-w-[280px] lg:min-w-0;
+    @apply flex flex-col h-full border-r relative min-w-[280px] lg:min-w-0 min-h-0;
     border-color: var(--border-subtle);
   }
   
@@ -454,12 +454,17 @@
   }
 
   .day-column-lanes {
-    @apply flex-1 flex flex-col overflow-y-auto overflow-x-hidden;
+    @apply flex-1 flex flex-col overflow-y-auto overflow-x-hidden min-h-0;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .day-column-lanes::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
   }
 
   /* ── Swim Lane ── */
   .swim-lane {
-    @apply flex flex-col flex-1 min-h-[200px] border-b p-2;
+    @apply flex flex-col border-b p-2;
     border-color: var(--border-subtle);
   }
 
@@ -495,7 +500,7 @@
   }
 
   .swim-lane-body {
-    @apply flex-1 flex flex-col gap-2 p-1 rounded-lg transition-colors min-h-[100px];
+    @apply flex flex-col gap-2 p-1 rounded-lg transition-colors min-h-[40px];
   }
 
   .swim-lane-body-over {
@@ -503,7 +508,7 @@
   }
 
   .swim-lane-empty {
-    @apply flex-1 flex items-center justify-center text-xs border-2 border-dashed rounded-lg m-1;
+    @apply flex items-center justify-center text-xs border-2 border-dashed rounded-lg m-1 py-4;
     border-color: var(--border-subtle);
     color: var(--text-tertiary);
   }
