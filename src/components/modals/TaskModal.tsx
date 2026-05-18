@@ -146,6 +146,22 @@ export function TaskModal({
 
         {/* Body */}
         <div className="modal-body">
+          {/* Read-only Task Info */}
+          {isEdit && task && (
+            <div className="flex flex-col sm:flex-row gap-4 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg text-sm border border-slate-100 dark:border-slate-700/50">
+              {task.createdAt && (
+                <div>
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">Oluşturulma: </span>
+                  <span className="text-slate-600 dark:text-slate-400">
+                    {typeof task.createdAt.toDate === "function" 
+                      ? task.createdAt.toDate().toLocaleString('tr-TR', { dateStyle: 'medium', timeStyle: 'short' }) 
+                      : new Date(task.createdAt as any).toLocaleString('tr-TR', { dateStyle: 'medium', timeStyle: 'short' })}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Title */}
           <div className="form-group">
             <label htmlFor="task-title" className="form-label">
