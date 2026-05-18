@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { format, addDays, subDays, parseISO } from "date-fns";
 import type { Task, Tag, Lane, Priority } from "@/lib/types";
 import { LANE_CONFIG } from "@/lib/types";
 import { addTask, updateTask, deleteTask } from "@/lib/firestore";
@@ -32,6 +33,7 @@ export function TaskModal({
   const [description, setDescription] = useState(task?.description ?? "");
   const [priority, setPriority] = useState<Priority>(task?.priority ?? "medium");
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>(task?.tags ?? []);
+  const [day, setDay] = useState<string>(task?.day ?? defaultDay ?? format(new Date(), "yyyy-MM-dd"));
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -64,6 +66,7 @@ export function TaskModal({
           description: description.trim(),
           priority,
           tags: selectedTagIds,
+          day,
         });
       } else {
         await addTask(userId, {
@@ -146,21 +149,41 @@ export function TaskModal({
 
         {/* Body */}
         <div className="modal-body">
-          {/* Read-only Task Info */}
-          {isEdit && task && (
-            <div className="flex flex-col sm:flex-row gap-4 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg text-sm border border-slate-100 dark:border-slate-700/50">
-              {task.createdAt && (
-                <div>
-                  <span className="font-semibold text-slate-700 dark:text-slate-300">Oluşturulma: </span>
-                  <span className="text-slate-600 dark:text-slate-400">
-                    {typeof task.createdAt.toDate === "function" 
-                      ? task.createdAt.toDate().toLocaleString('tr-TR', { dateStyle: 'medium', timeStyle: 'short' }) 
-                      : new Date(task.createdAt as any).toLocaleString('tr-TR', { dateStyle: 'medium', timeStyle: 'short' })}
-                  </span>
-                </div>
-              )}
+          {/* Day & Read-only Info */}
+          <div className="flex flex-col sm:flex-row gap-4 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg text-sm border border-slate-100 dark:border-slate-700/50">
+            <div className="flex flex-col items-start gap-1">
+              <span className="font-semibold text-slate-700 dark:text-slate-300">Tarih (Gün):</span>
+              <div className="flex items-center gap-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-0.5">
+                <button 
+                  type="button"
+                  onClick={() => setDay(format(subDays(parseISO(day), 1), "yyyy-MM-dd"))}
+                  className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  title="Önceki Gün"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <span className="text-slate-700 dark:text-slate-300 font-medium text-sm w-24 text-center">{day}</span>
+                <button 
+                  type="button"
+                  onClick={() => setDay(format(addDays(parseISO(day), 1), "yyyy-MM-dd"))}
+                  className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  title="Sonraki Gün"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+              </div>
             </div>
-          )}
+            {isEdit && task?.createdAt && (
+              <div className="flex flex-col items-start justify-center gap-1">
+                <span className="font-semibold text-slate-700 dark:text-slate-300">Oluşturulma: </span>
+                <span className="text-slate-600 dark:text-slate-400">
+                  {typeof task.createdAt.toDate === "function" 
+                    ? task.createdAt.toDate().toLocaleString('tr-TR', { dateStyle: 'medium', timeStyle: 'short' }) 
+                    : new Date(task.createdAt as any).toLocaleString('tr-TR', { dateStyle: 'medium', timeStyle: 'short' })}
+                </span>
+              </div>
+            )}
+          </div>
 
           {/* Title */}
           <div className="form-group">
