@@ -11,7 +11,7 @@ interface DayColumnProps {
   onEditTask: (task: Task) => void;
 }
 
-const LANES: Lane[] = ["backlog", "inprogress", "done"];
+const LANES: Lane[] = ["backlog", "inprogress", "done", "holded"];
 
 export function DayColumn({
   day,

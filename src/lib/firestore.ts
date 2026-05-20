@@ -141,7 +141,7 @@ export async function migrateOverdueTasks(userId: string): Promise<number> {
     tasksRef,
     where("userId", "==", userId),
     where("day", "<", today),
-    where("lane", "in", ["backlog", "inprogress"])
+    where("lane", "in", ["backlog", "inprogress", "holded"])
   );
 
   const snapshot = await getDocs(q);

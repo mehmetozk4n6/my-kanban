@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase/firestore";
 
 export type Priority = "low" | "medium" | "high" | "critical";
-export type Lane = "backlog" | "inprogress" | "done";
+export type Lane = "backlog" | "inprogress" | "done" | "holded";
 
 export interface Task {
   id: string;
@@ -37,6 +37,7 @@ export const LANE_CONFIG: Record<Lane, { label: string; icon: string }> = {
   backlog: { label: "Backlog", icon: "📋" },
   inprogress: { label: "In Progress", icon: "🔄" },
   done: { label: "Done", icon: "✅" },
+  holded: { label: "Holded", icon: "⏳" },
 };
 
 export const PRIORITY_CONFIG: Record<
